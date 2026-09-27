@@ -1,5 +1,3 @@
-import com.sun.jdi.Field
-
 fun main() {
     val playerField = createEmptyField()
     val enemyField = createEmptyField()
@@ -18,45 +16,87 @@ fun main() {
     printField(playerField, "Ваше поле")
     printField(enemyField, "Поле противника", false)
     printBothFields(playerField, enemyField)
+    printBothFields(playerField, enemyField, true)
+    printField(playerField, "Ваше поле", debug = true)
 }
 
-fun createEmptyField(): Array<CharArray>{
-    return Array(10) {CharArray(10){'.'} }
+fun createEmptyField(size: Int = 10): Array<CharArray>{
+    return Array(size) {CharArray(size){'.'} }
 }
 
-fun printField(field: Array<CharArray>, title: String, showShips: Boolean = true){
-    println("==== $title ====")
-    print("   ")
-    for (c in 0..9) print("$c ")
-    println()
-    for (r in 0..9) {
-        print("$r  ")
-        for (c in 0..9) {
-            if (showShips) print("${field[r][c]} ")
-            else {
-                if (field[r][c] == '#') print(". ")
-                else print("${field[r][c]} ")
-            }
+fun printField(field: Array<CharArray>, title: String, showShips: Boolean = true, debug: Boolean = false){
+    if (debug) {
+        println("=== $title (debug) ===")
+        print("     ")
+        for (c in field.indices) {
+            print("$c   ")
         }
         println()
+        print("   +")
+        print("---+".repeat(field.size))
+        println()
+        for (r in field.indices) {
+            print("$r  |")
+            for (c in field.indices) {
+                if (showShips) {
+                    print(" ${field[r][c]} |")
+                } else {
+                    if (field[r][c] == '#') print(" . |")
+                    else print(" ${field[r][c]} |")
+                }
+            }
+            println()
+            print("   +")
+            print("---+".repeat(field.size))
+            println()
+        }
+    }
+    else {
+        println("==== $title ====")
+        print("  ")
+        for (c in field.indices) print("$c ")
+        println()
+        for (r in field.indices) {
+            print("$r ")
+            for (c in field.indices) {
+                if (showShips) print("${field[r][c]} ")
+                else {
+                    if (field[r][c] == '#') print(". ")
+                    else print("${field[r][c]} ")
+                }
+            }
+            println()
+        }
     }
 }
 
-fun printBothFields(player: Array<CharArray>, enemy: Array<CharArray>){
-    println("====== Ваше поле ======       === Поле противника ===")
-    print("   ")
-    for (c in 0..9) print("$c ")
-    print("      ")
-    print("    ")
-    for (c in 0..9) print("$c ")
-    println()
-    for (r in 0..9) {
-        print("$r  ")
-        for (c in 0..9) print("${player[r][c]} ")
-        print("       ")
-        print("$r  ")
-        for (c in 0..9) print("${enemy[r][c]} ")
+fun printBothFields(player: Array<CharArray>, enemy: Array<CharArray>, showEnemyShips: Boolean = false) {
+    if (player.size != enemy.size || player[0].size != enemy[0].size) {
+        println("Ошибка: размеры полей должны совпадать!")
+    }
+    else{
+        println("====== Ваше поле ======       === Поле противника ===")
+        print("   ")
+        for (c in player.indices) print("$c ")
+        print("      ")
+        print("    ")
+        for (c in enemy.indices) print("$c ")
         println()
+        for (r in enemy.indices) {
+            print("$r  ")
+            for (c in player.indices) print("${player[r][c]} ")
+            print("       ")
+            print("$r  ")
+            for (c in enemy.indices) {
+                if (showEnemyShips) {
+                    print("${enemy[r][c]} ")
+                } else {
+                    if (enemy[r][c] == '#') print(". ")
+                    else print("${enemy[r][c]} ")
+                }
+            }
+            println()
+        }
     }
 }
 
