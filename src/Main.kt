@@ -1,80 +1,33 @@
 fun main() {
-    val playerField = createEmptyField()
-    val enemyField = createEmptyField()
+    val player = Player()
+    val enemy = Player()
 
-    playerField[3][2] = '#'
-    playerField[3][3] = '#'
-    playerField[3][4] = '#'
-    playerField[3][5] = '#'
+    player.name = "Ваше поле"
+    enemy.name = "Поле противника"
 
-    enemyField[5][7] = '#'
-    enemyField[6][7] = '#'
-    enemyField[7][7] = '#'
-    enemyField[5][5] = 'x'
-    enemyField[5][6] = 'o'
+    player.field[3][2] = '#'
+    player.field[3][3] = '#'
+    player.field[3][4] = '#'
+    player.field[3][5] = '#'
 
-    printField(playerField, "Ваше поле")
-    printField(enemyField, "Поле противника", false)
-    printBothFields(playerField, enemyField)
-    printBothFields(playerField, enemyField, true)
-    printField(playerField, "Ваше поле", debug = true)
-}
+    enemy.field[5][7] = '#'
+    enemy.field[6][7] = '#'
+    enemy.field[7][7] = '#'
+    enemy.field[5][5] = 'x'
+    enemy.field[5][6] = 'o'
 
-fun createEmptyField(size: Int = 10): Array<CharArray>{
-    return Array(size) {CharArray(size){'.'} }
-}
-
-fun printField(field: Array<CharArray>, title: String, showShips: Boolean = true, debug: Boolean = false){
-    if (debug) {
-        println("=== $title (debug) ===")
-        print("     ")
-        for (c in field.indices) {
-            print("$c   ")
-        }
-        println()
-        print("   +")
-        print("---+".repeat(field.size))
-        println()
-        for (r in field.indices) {
-            print("$r  |")
-            for (c in field.indices) {
-                if (showShips) {
-                    print(" ${field[r][c]} |")
-                } else {
-                    if (field[r][c] == '#') print(" . |")
-                    else print(" ${field[r][c]} |")
-                }
-            }
-            println()
-            print("   +")
-            print("---+".repeat(field.size))
-            println()
-        }
-    }
-    else {
-        println("==== $title ====")
-        print("  ")
-        for (c in field.indices) print("$c ")
-        println()
-        for (r in field.indices) {
-            print("$r ")
-            for (c in field.indices) {
-                if (showShips) print("${field[r][c]} ")
-                else {
-                    if (field[r][c] == '#') print(". ")
-                    else print("${field[r][c]} ")
-                }
-            }
-            println()
-        }
-    }
+    player.printField()
+    enemy.printField(false)
+    printBothFields(player.field, enemy.field)
+    printBothFields(player.field, enemy.field, true)
+    player.printField(debug = true)
 }
 
 fun printBothFields(player: Array<CharArray>, enemy: Array<CharArray>, showEnemyShips: Boolean = false) {
     if (player.size != enemy.size || player[0].size != enemy[0].size) {
         println("Ошибка: размеры полей должны совпадать!")
     }
-    else{
+    else {
         println("====== Ваше поле ======       === Поле противника ===")
         print("   ")
         for (c in player.indices) print("$c ")
