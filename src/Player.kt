@@ -2,6 +2,13 @@ class Player(size: Int = 10) {
     var name: String = ""
     var field: Array<CharArray> = Array(size) { CharArray(size){'.'} }
 
+    var shots: Int = 0
+    var hits: Int = 0
+
+    fun printStats() {
+        println("Игрок $name: выстрелов $shots, попаданий $hits")
+    }
+
     fun printField(showShips: Boolean = true, debug: Boolean = false){
         if (debug) {
             println("=== $name (debug) ===")

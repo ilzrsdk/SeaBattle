@@ -5,6 +5,9 @@ fun main() {
     player.name = "Ваше поле"
     enemy.name = "Поле противника"
 
+    player.shots = 10
+    player.hits = 7
+
     player.field[3][2] = '#'
     player.field[3][3] = '#'
     player.field[3][4] = '#'
@@ -17,35 +20,36 @@ fun main() {
     enemy.field[5][6] = 'o'
 
     player.printField()
+    player.printStats()
     enemy.printField(false)
-    printBothFields(player.field, enemy.field)
-    printBothFields(player.field, enemy.field, true)
+    printBothFields(player, enemy)
+    printBothFields(player, enemy, true)
     player.printField(debug = true)
 }
 
-fun printBothFields(player: Array<CharArray>, enemy: Array<CharArray>, showEnemyShips: Boolean = false) {
-    if (player.size != enemy.size || player[0].size != enemy[0].size) {
+fun printBothFields(player: Player, enemy: Player, showEnemyShips: Boolean = false) {
+    if (player.field.size != enemy.field.size || player.field[0].size != enemy.field[0].size) {
         println("Ошибка: размеры полей должны совпадать!")
     }
     else {
         println("====== Ваше поле ======       === Поле противника ===")
         print("   ")
-        for (c in player.indices) print("$c ")
+        for (c in player.field.indices) print("$c ")
         print("      ")
         print("    ")
-        for (c in enemy.indices) print("$c ")
+        for (c in enemy.field.indices) print("$c ")
         println()
-        for (r in enemy.indices) {
+        for (r in enemy.field.indices) {
             print("$r  ")
-            for (c in player.indices) print("${player[r][c]} ")
+            for (c in player.field.indices) print("${player.field[r][c]} ")
             print("       ")
             print("$r  ")
-            for (c in enemy.indices) {
+            for (c in enemy.field.indices) {
                 if (showEnemyShips) {
-                    print("${enemy[r][c]} ")
+                    print("${enemy.field[r][c]} ")
                 } else {
-                    if (enemy[r][c] == '#') print(". ")
-                    else print("${enemy[r][c]} ")
+                    if (enemy.field[r][c] == '#') print(". ")
+                    else print("${enemy.field[r][c]} ")
                 }
             }
             println()
