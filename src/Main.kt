@@ -41,7 +41,7 @@ fun printBothFields(player: Player, enemy: Player, showEnemyShips: Boolean = fal
         println("Ошибка: размеры полей должны совпадать!")
     }
     else {
-        println("====== Ваше поле ======       === Поле противника ===")
+        println("====== ${player.name} ======       === ${enemy.name} ===")
         print("   ")
         for (c in player.field.indices) print("$c ")
         print("      ")
