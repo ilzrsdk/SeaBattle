@@ -1,12 +1,22 @@
 fun main() {
     val player = Player()
+    player.name = "Вы"
     val enemy = Player()
+    enemy.name = "Противник"
 
-    player.name = "Ваше поле"
-    enemy.name = "Поле противника"
+    player.registerShot(true)
+    player.registerShot(false)
+    player.registerShot(true)
 
-    player.shots = 10
-    player.hits = 7
+    println(player.status())
+
+    player.takeDamage()
+    player.takeDamage()
+    println(player.shipsLeft)
+    println(player.isAlive())
+
+    player.reset()
+    println(player.status())
 
     player.field[3][2] = '#'
     player.field[3][3] = '#'
@@ -19,12 +29,11 @@ fun main() {
     enemy.field[5][5] = 'x'
     enemy.field[5][6] = 'o'
 
-    player.printField()
-    player.printStats()
-    enemy.printField(false)
-    printBothFields(player, enemy)
-    printBothFields(player, enemy, true)
-    player.printField(debug = true)
+    //player.printField()
+    //enemy.printField(false)
+    //printBothFields(player, enemy)
+    //printBothFields(player, enemy, true)
+    //player.printField(debug = true)
 }
 
 fun printBothFields(player: Player, enemy: Player, showEnemyShips: Boolean = false) {
