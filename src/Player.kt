@@ -1,46 +1,54 @@
-class Player(size: Int = 10) {
-    var name: String = ""
-    var field: Array<CharArray> = Array(size) { CharArray(size){'.'} }
+import java.lang.reflect.Field
 
-    var shots: Int = 0
-    var hits: Int = 0
+class Player(val name: String, val size: Int = 10) {
 
-    var shipsLeft: Int = 20
+    private val _field: Array<CharArray> = Array(size) { CharArray(size){'.'} }
+    fun field(): Array<CharArray> = _field
+
+    private var _shots: Int = 0
+    val shots: Int
+        get() = _shots
+
+    private var _hits: Int = 0
+    val hits: Int
+        get() = _hits
+
+    private var _shipsLeft: Int = 20
+    val shipsLeft: Int
+        get() = _shipsLeft
 
     fun status(): String {
-        return "Игрок $name: палуб осталось $shipsLeft, выстрелов $shots, попаданий $hits, точность ${String.format("%.1f", accuracy())}%"
-    }
-
-    fun printStats() {
-        println(status())
+        return "Игрок $name: палуб осталось $_shipsLeft, выстрелов $_shots, попаданий $_hits, точность ${String.format("%.1f", accuracy())}%"
     }
 
     fun registerShot(hit: Boolean) {
-        shots++
-        if (hit) {
-            hits++
+        _shots++
+        if (hit) _hits++
+    }
+
+    fun accuracy(): Double =
+        if (_shots == 0) 0.0 else _hits * 100.0 / _shots
+
+
+    fun placeShip(row: Int, col: Int) {
+        if (row in 0..<_field.size && col in 0..<_field.size) {
+            _field[row][col] = '#'
         }
     }
 
-    fun accuracy(): Double {
-        return if (shots == 0) {
-            0.0
-        } else {
-            hits * 100.0 / shots
+    fun markShot(row: Int, col: Int, hit: Boolean) {
+        if (row in 0..<_field.size && col in 0..<_field.size) {
+            _field[row][col] = if (hit) 'x' else 'o'
         }
     }
 
     fun takeDamage(): Boolean {
-        shipsLeft--
-        return if (shipsLeft > 0) {
-            true
-        } else {
-            false
-        }
+        _shipsLeft--
+        return isAlive()
     }
 
     fun isAlive(): Boolean{
-        return if (shipsLeft > 0) {
+        return if (_shipsLeft > 0) {
             true
         } else {
             false
@@ -48,12 +56,12 @@ class Player(size: Int = 10) {
     }
 
     fun reset() {
-        shots = 0
-        hits = 0
-        shipsLeft = 20
-        for (r in field.indices) {
-            for (c in field[r].indices) {
-                field[r][c] = '.'
+        _shots = 0
+        _hits = 0
+        _shipsLeft = 20
+        for (r in _field.indices) {
+            for (c in _field[r].indices) {
+                _field[r][c] = '.'
             }
         }
     }
@@ -62,41 +70,41 @@ class Player(size: Int = 10) {
         if (debug) {
             println("=== $name (debug) ===")
             print("     ")
-            for (c in field.indices) {
+            for (c in _field.indices) {
                 print("$c   ")
             }
             println()
             print("   +")
-            print("---+".repeat(field.size))
+            print("---+".repeat(_field.size))
             println()
-            for (r in field.indices) {
+            for (r in _field.indices) {
                 print("$r  |")
-                for (c in field.indices) {
+                for (c in _field.indices) {
                     if (showShips) {
-                        print(" ${field[r][c]} |")
+                        print(" ${_field[r][c]} |")
                     } else {
-                        if (field[r][c] == '#') print(" . |")
-                        else print(" ${field[r][c]} |")
+                        if (_field[r][c] == '#') print(" . |")
+                        else print(" ${_field[r][c]} |")
                     }
                 }
                 println()
                 print("   +")
-                print("---+".repeat(field.size))
+                print("---+".repeat(_field.size))
                 println()
             }
         }
         else {
             println("==== $name ====")
             print("  ")
-            for (c in field.indices) print("$c ")
+            for (c in _field.indices) print("$c ")
             println()
-            for (r in field.indices) {
+            for (r in _field.indices) {
                 print("$r ")
-                for (c in field.indices) {
-                    if (showShips) print("${field[r][c]} ")
+                for (c in _field.indices) {
+                    if (showShips) print("${_field[r][c]} ")
                     else {
-                        if (field[r][c] == '#') print(". ")
-                        else print("${field[r][c]} ")
+                        if (_field[r][c] == '#') print(". ")
+                        else print("${_field[r][c]} ")
                     }
                 }
                 println()
