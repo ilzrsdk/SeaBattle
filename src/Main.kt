@@ -24,13 +24,13 @@ fun main() {
     enemy.field()[5][7] = '#'
     enemy.field()[6][7] = '#'
     enemy.field()[7][7] = '#'
-    enemy.field()[5][5] = 'x'
-    enemy.field()[5][6] = 'o'
 
-    //player.printField()
-    //enemy.printField(false)
-    //printBothFields(player, enemy)
-    //printBothFields(player, enemy, true)
+    enemy.markShot(3, 3, true)
+    enemy.markShot(4, 4, false)
+    player.printField()
+    enemy.printField(false)
+    printBothFields(player, enemy)
+    printBothFields(player, enemy, true)
     //player.printField(debug = true)
 }
 

@@ -55,6 +55,7 @@ class Player(val name: String, val size: Int = 10) {
         }
     }
 
+
     fun reset() {
         _shots = 0
         _hits = 0
