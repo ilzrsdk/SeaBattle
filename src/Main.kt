@@ -16,14 +16,14 @@ fun main() {
     player.reset()
     println(player.status())
 
-    player.field()[3][2] = '#'
-    player.field()[3][3] = '#'
-    player.field()[3][4] = '#'
-    player.field()[3][5] = '#'
+    player.placeShip(3,2)
+    player.placeShip(3,3)
+    player.placeShip(3,4)
+    player.placeShip(3,5)
 
-    enemy.field()[5][7] = '#'
-    enemy.field()[6][7] = '#'
-    enemy.field()[7][7] = '#'
+    enemy.placeShip(5,7)
+    enemy.placeShip(6,7)
+    enemy.placeShip(7,7)
 
     enemy.markShot(3, 3, true)
     enemy.markShot(4, 4, false)
