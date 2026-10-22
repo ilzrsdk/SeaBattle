@@ -1,3 +1,5 @@
+import ShipType.entries
+
 fun main() {
     val player = Player("Вы")
     val enemy = Player("Противник")
@@ -25,13 +27,20 @@ fun main() {
     enemy.placeShip(6,7)
     enemy.placeShip(7,7)
 
-//    enemy.markShot(3, 3, true)
-//    enemy.markShot(4, 4, false)
+    enemy.markShot(3, 3, true)
+    enemy.markShot(4, 4, false)
     player.printField()
     enemy.printField(false)
     printBothFields(player, enemy)
     printBothFields(player, enemy, true)
     player.printField(debug = true)
+
+    for (ship in ShipType.entries) {
+        println("$ship — ${ship.size}")
+    }
+
+    println(ShipType.BATTLESHIP.isBig())
+    println(ShipType.BOAT.isBig())
 }
 
 fun printBothFields(player: Player, enemy: Player, showEnemyShips: Boolean = false) {
