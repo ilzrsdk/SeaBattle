@@ -2,8 +2,8 @@ import java.lang.reflect.Field
 
 class Player(val name: String, val size: Int = 10) {
 
-    private val _field: Array<CharArray> = Array(size) { CharArray(size){'.'} }
-    fun field(): Array<CharArray> = _field
+    private val _field: Array<Array<CellState>> = Array(size) { Array(size){ CellState.EMPTY } }
+    fun field(): Array<Array<CellState>> = _field
 
     private var _shots: Int = 0
     val shots: Int
@@ -32,13 +32,13 @@ class Player(val name: String, val size: Int = 10) {
 
     fun placeShip(row: Int, col: Int) {
         if (row in 0..<_field.size && col in 0..<_field.size) {
-            _field[row][col] = '#'
+            _field[row][col] = CellState.SHIP
         }
     }
 
     fun markShot(row: Int, col: Int, hit: Boolean) {
         if (row in 0..<_field.size && col in 0..<_field.size) {
-            _field[row][col] = if (hit) 'x' else 'o'
+            _field[row][col] = if (hit) CellState.HIT else CellState.MISS
         }
     }
 
@@ -61,7 +61,7 @@ class Player(val name: String, val size: Int = 10) {
         _shipsLeft = 20
         for (r in _field.indices) {
             for (c in _field[r].indices) {
-                _field[r][c] = '.'
+                _field[r][c] = CellState.EMPTY
             }
         }
     }
@@ -81,10 +81,10 @@ class Player(val name: String, val size: Int = 10) {
                 print("$r  |")
                 for (c in _field.indices) {
                     if (showShips) {
-                        print(" ${_field[r][c]} |")
+                        print(" ${_field[r][c].toChar()} |")
                     } else {
-                        if (_field[r][c] == '#') print(" . |")
-                        else print(" ${_field[r][c]} |")
+                        if (_field[r][c] == CellState.SHIP) print(" ${CellState.EMPTY.toChar()} |")
+                        else print(" ${_field[r][c].toChar()} |")
                     }
                 }
                 println()
@@ -101,10 +101,10 @@ class Player(val name: String, val size: Int = 10) {
             for (r in _field.indices) {
                 print("$r ")
                 for (c in _field.indices) {
-                    if (showShips) print("${_field[r][c]} ")
+                    if (showShips) print("${_field[r][c].toChar()} ")
                     else {
-                        if (_field[r][c] == '#') print(". ")
-                        else print("${_field[r][c]} ")
+                        if (_field[r][c] == CellState.SHIP) print("${CellState.EMPTY.toChar()} ")
+                        else print("${_field[r][c].toChar()} ")
                     }
                 }
                 println()
