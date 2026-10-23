@@ -21,6 +21,43 @@ class Player(val name: String, val size: Int = 10) {
         return "Игрок $name: палуб осталось $_shipsLeft, выстрелов $_shots, попаданий $_hits, точность ${String.format("%.1f", accuracy())}%"
     }
 
+    fun isInside(row: Int, col: Int): Boolean{
+        return row in 0..9 && col in 0..9
+    }
+
+    fun canPlaceShip(startRow: Int, startCol: Int, size: Int, horizontal: Boolean): Boolean {
+        for (i in 0 until size) {
+            val r = if (horizontal) startRow else startRow + i
+            val c = if (horizontal) startCol + i else startCol
+
+            if (!isInside(r, c)) return false
+
+            if (_field[r][c] != CellState.EMPTY) return false
+
+            for (dr in -1..1) {
+                for (dc in -1..1) {
+                    if (dr == 0 && dc == 0) continue
+                    val nr = r + dr
+                    val nc = c + dr
+
+                    if (isInside(nr, nc) && _field[nr][nc] == CellState.SHIP) {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    fun hasShips(): Boolean {
+        for (r in 0..9) {
+            for (c in 0..9) {
+                if (_field[r][c] == CellState.SHIP) return true
+            }
+        }
+        return false
+    }
+
     fun registerShot(hit: Boolean) {
         _shots++
         if (hit) _hits++
@@ -30,10 +67,35 @@ class Player(val name: String, val size: Int = 10) {
         if (_shots == 0) 0.0 else _hits * 100.0 / _shots
 
 
-    fun placeShip(row: Int, col: Int) {
-        if (row in 0..<_field.size && col in 0..<_field.size) {
-            _field[row][col] = CellState.SHIP
+    fun placeShip(startRow: Int, startCol: Int, size: Int, horizontal: Boolean): Boolean {
+        if (!canPlaceShip(startRow, startCol, size, horizontal)) {
+            return false
         }
+        for (i in 0 until size) {
+            val r = if (horizontal) startRow else startRow + i
+            val c = if (horizontal) startCol + i else startCol
+            _field[r][c] = CellState.SHIP
+        }
+        return true
+    }
+
+    fun shoot(row: Int, col: Int): Boolean {
+        if (!isInside(row, col)) {
+            println("Выстрел за границей поля!")
+            return false
+        }
+
+        val current = _field[row][col]
+        if (current == CellState.HIT || current == CellState.MISS) {
+            println("Сюда уже стреляли!")
+            return false
+        }
+
+        val hit = (current == CellState.SHIP)
+        _field[row][col] = if (hit) CellState.HIT else CellState.MISS
+
+        registerShot(hit)
+        return hit
     }
 
     fun markShot(row: Int, col: Int, hit: Boolean) {
@@ -66,51 +128,7 @@ class Player(val name: String, val size: Int = 10) {
         }
     }
 
-    fun printField(showShips: Boolean = true, debug: Boolean = false){
-        if (debug) {
-            println("=== $name (debug) ===")
-            print("     ")
-            for (c in _field.indices) {
-                print("$c   ")
-            }
-            println()
-            print("   +")
-            print("---+".repeat(_field.size))
-            println()
-            for (r in _field.indices) {
-                print("$r  |")
-                for (c in _field.indices) {
-                    if (showShips) {
-                        print(" ${_field[r][c].toChar()} |")
-                    } else {
-                        if (_field[r][c] == CellState.SHIP) print(" ${CellState.EMPTY.toChar()} |")
-                        else print(" ${_field[r][c].toChar()} |")
-                    }
-                }
-                println()
-                print("   +")
-                print("---+".repeat(_field.size))
-                println()
-            }
-        }
-        else {
-            println("==== $name ====")
-            print("  ")
-            for (c in _field.indices) print("$c ")
-            println()
-            for (r in _field.indices) {
-                print("$r ")
-                for (c in _field.indices) {
-                    if (showShips) print("${_field[r][c].toChar()} ")
-                    else {
-                        if (_field[r][c] == CellState.SHIP) print("${CellState.EMPTY.toChar()} ")
-                        else print("${_field[r][c].toChar()} ")
-                    }
-                }
-                println()
-            }
-        }
-    }
+
 
 
 }

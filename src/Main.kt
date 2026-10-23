@@ -18,22 +18,15 @@ fun main() {
     player.reset()
     println(player.status())
 
-    player.placeShip(3,2)
-    player.placeShip(3,3)
-    player.placeShip(3,4)
-    player.placeShip(3,5)
 
-    enemy.placeShip(5,7)
-    enemy.placeShip(6,7)
-    enemy.placeShip(7,7)
 
     enemy.markShot(3, 3, true)
     enemy.markShot(4, 4, false)
-    player.printField()
-    enemy.printField(false)
+    //player.printField()
+    //enemy.printField(false)
     printBothFields(player, enemy)
-    printBothFields(player, enemy, true)
-    player.printField(debug = true)
+    printBothFields(player, enemy)
+    //player.printField(debug = true)
 
     for (ship in ShipType.entries) {
         println("$ship — ${ship.size}")
@@ -43,7 +36,7 @@ fun main() {
     println(ShipType.BOAT.isBig())
 }
 
-fun printBothFields(player: Player, enemy: Player, showEnemyShips: Boolean = false) {
+fun printBothFields(player: Player, enemy: Player) {
     if (player.field().size != enemy.field().size || player.field()[0].size != enemy.field()[0].size) {
         println("Ошибка: размеры полей должны совпадать!")
     }
@@ -61,18 +54,62 @@ fun printBothFields(player: Player, enemy: Player, showEnemyShips: Boolean = fal
             print("       ")
             print("$r  ")
             for (c in enemy.field().indices) {
-                if (showEnemyShips) {
-                    print("${enemy.field()[r][c].toChar()} ")
-                } else {
-                    if (enemy.field()[r][c] == CellState.SHIP) print("${CellState.EMPTY.toChar()} ")
-                    else print("${enemy.field()[r][c].toChar()} ")
-                }
+                val state = enemy.field()[r][c]
+                val shown = if (state == CellState.SHIP) CellState.EMPTY else state
+                print("${shown.toChar()} ")
             }
             println()
         }
     }
 }
 
+fun printField(player: Player, hideShips: Boolean, debug: Boolean = false){
+    if (debug) {
+        println("=== ${player.name} (debug) ===")
+        print("     ")
+        for (c in player.field().indices) {
+            print("$c   ")
+        }
+        println()
+        print("   +")
+        print("---+".repeat(player.field().size))
+        println()
+        for (r in player.field().indices) {
+            print("$r  |")
+            for (c in player.field().indices) {
+                val state = player.field()[r][c]
+                val shown = if (hideShips && state == CellState.SHIP) CellState.EMPTY else state
+                print("${shown.toChar()} ")
+            }
+            println()
+            print("   +")
+            print("---+".repeat(player.field().size))
+            println()
+        }
+    }
+    else {
+        println("==== ${player.name} ====")
+        print("  ")
+        for (c in player.field().indices) print("$c ")
+        println()
+        for (r in player.field().indices) {
+            print("$r ")
+            for (c in player.field().indices) {
+                val state = player.field()[r][c]
+                val shown = if (hideShips && state == CellState.SHIP) CellState.EMPTY else state
+                print("${shown.toChar()} ")
+            }
+            println()
+        }
+    }
 
+    fun printRules() {
+        println("=========================================")
+        println("           МОРСКОЙ БОЙ - ПРАВИЛА")
+        println("=========================================")
+        println("")
+    }
+
+}
 
 
