@@ -38,7 +38,7 @@ class Player(val name: String, val size: Int = 10) {
                 for (dc in -1..1) {
                     if (dr == 0 && dc == 0) continue
                     val nr = r + dr
-                    val nc = c + dr
+                    val nc = c + dc
 
                     if (isInside(nr, nc) && _field[nr][nc] == CellState.SHIP) {
                         return false
@@ -77,6 +77,19 @@ class Player(val name: String, val size: Int = 10) {
             _field[r][c] = CellState.SHIP
         }
         return true
+    }
+
+    fun countShips(): Int {
+        var count = 0
+        for (r in _field.indices) {
+            for (c in _field[r].indices) {
+                if (_field[r][c] != CellState.SHIP) continue
+                val leftShip = c > 0 && _field[r][c - 1] == CellState.SHIP
+                val upShip = r > 0 && _field[r - 1][c] == CellState.SHIP
+                if (!leftShip && !upShip) count++
+            }
+        }
+        return count
     }
 
     fun shoot(row: Int, col: Int): Boolean {
