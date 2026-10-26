@@ -92,19 +92,19 @@ class Player(val name: String, val size: Int = 10) {
         return count
     }
 
+    fun canShootAt(row: Int, col: Int): Boolean {
+        if (!isInside(row, col)) return false
+        val state = _field[row][col]
+        return state != CellState.HIT && state != CellState.MISS
+    }
+
     fun shoot(row: Int, col: Int): Boolean {
-        if (!isInside(row, col)) {
-            println("Выстрел за границей поля!")
+        if (!canShootAt(row, col)) {
+            println("Выстрел невозможен: за границей или сюда уже стреляли.")
             return false
         }
 
-        val current = _field[row][col]
-        if (current == CellState.HIT || current == CellState.MISS) {
-            println("Сюда уже стреляли!")
-            return false
-        }
-
-        val hit = (current == CellState.SHIP)
+        val hit = (_field[row][col] == CellState.SHIP)
         _field[row][col] = if (hit) CellState.HIT else CellState.MISS
 
         registerShot(hit)
